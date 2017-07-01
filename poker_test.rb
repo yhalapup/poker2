@@ -9,12 +9,6 @@ class PokerTest < Minitest::Test
     assert_equal [high_of_jack], game.best_hand
   end
 
-  def test_one_hand_sort_result
-    high_of_jack = %w(4S 7H 8D JC 5S )
-    game = Poker.new([high_of_jack])
-    assert_equal [%w(4S 5S 7H 8D JC)], game.best_hand
-  end
-
   def test_highest_card
     high_of_8 = %w(4S 5H 6S 8D 2H)
     high_of_queen = %w(2S 4H 6C 9D QH)
@@ -23,7 +17,6 @@ class PokerTest < Minitest::Test
   end
 
   def test_highest_card_10
-    skip
     high_of_8 = %w(4D 5S 6S 8D 3C)
     high_of_10 = %w(2S 4C 7S 9H 10H)
     game = Poker.new([high_of_8, high_of_10])
@@ -31,7 +24,6 @@ class PokerTest < Minitest::Test
   end
 
   def test_nothing_vs_one_pair
-    skip
     high_of_king = %w(4S 5H 6C 8D KH)
     pair_of_4 = %w(2S 4H 6S 4D JH)
     game = Poker.new([high_of_king, pair_of_4])

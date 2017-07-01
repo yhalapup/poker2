@@ -13,7 +13,11 @@ class Poker
   def best_hand
     # return @hands if hands.count == 1
 
-    result = [hands.sort.first]
+    # a = hands.map(&:to_s)
+    # puts "hands: -- #{a} --"
+    # a = hands.sort.map(&:to_s)
+    # puts "hands.sort: -- #{a} --"
+    result = [hands.sort.last]
     result.map(&:to_s)
   end
 
@@ -32,25 +36,40 @@ class Hand
   TWO_PAIR = 'TWO_PAIR'.freeze
   ONE_PAIR = 'ONE_PAIR'.freeze
   HIGH_CARD = 'HIGH_CARD'.freeze
-  COMBINATIONS_ORDER = [STRAIGHT_FLUSH, FOUR_OF_A_KIND, FULL_HOUSE, FLUSH, STRAIGHT, THREE_OF_A_KIND, TWO_PAIR, ONE_PAIR, HIGH_CARD]
+  COMBINATIONS_ORDER = [
+    HIGH_CARD,
+    ONE_PAIR,
+    TWO_PAIR,
+    THREE_OF_A_KIND,
+    STRAIGHT,
+    FLUSH,
+    FULL_HOUSE,
+    FOUR_OF_A_KIND,
+    STRAIGHT_FLUSH
+  ]
 
-  attr_reader :cards
+  attr_reader :cards, :original_cards
 
   def initialize(cards)
+    @original_cards = cards
     @cards = cards.map { |card| Card.new(card) }.sort
   end
 
   def to_s
-    @cards.map(&:to_s)
+    original_cards
   end
 
   def <=>(hand)
     result = COMBINATIONS_ORDER.index(combination) <=> COMBINATIONS_ORDER.index(hand.combination)
 
-    puts " : result : #{result}"
+    # puts " : result : #{result}"
     if result == 0
+      # puts combination
+      # puts (hand.combination)
+      # puts "combination_cards : #{combination_cards}"
+      # puts "hand.combination_cards : #{hand.combination_cards}"
       combination_cards.each_with_index do |card, index|
-        puts "card #{card.name} <=> hand.combination_cards[index] #{hand.combination_cards[index].name} : #{card <=> hand.combination_cards[index]}"
+        # puts "card #{card.name} <=> hand.combination_cards[index] #{hand.combination_cards[index].name} : #{card <=> hand.combination_cards[index]}"
         next if (card <=> hand.combination_cards[index]) == 0
 
         return card <=> hand.combination_cards[index]
@@ -76,10 +95,24 @@ class Hand
       return { STRAIGHT => cards }
     end
 
+    if one_pair?
+      puts "one_pair?"
+      return { ONE_PAIR => one_pair_cards }
+    end
+
     { HIGH_CARD => cards }
   end
 
   private
+
+  def one_pair?
+    cards.group_by(&:name).size == 4
+  end
+
+  def one_pair_cards
+    grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
+    grouped_cards.first(3).map(&:last).flatten.sort + grouped_cards.last.last
+  end
 
   def flash?
     cards.group_by(&:suite).size == 1
