@@ -96,8 +96,15 @@ class Hand
     end
 
     if one_pair?
-      puts "one_pair?"
       return { ONE_PAIR => one_pair_cards }
+    end
+
+    if two_pair?
+      return { TWO_PAIR => two_pair_cards }
+    end
+
+    if three_of_a_kind?
+      return { THREE_OF_A_KIND => three_of_a_kind_cards }
     end
 
     { HIGH_CARD => cards }
@@ -112,6 +119,24 @@ class Hand
   def one_pair_cards
     grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
     grouped_cards.first(3).map(&:last).flatten.sort + grouped_cards.last.last
+  end
+
+  def two_pair?
+    cards.group_by(&:name).values.map(&:count).sort == [1, 2, 2]
+  end
+
+  def two_pair_cards
+    grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
+    grouped_cards.first.last + grouped_cards.last(2).map(&:last).flatten.sort
+  end
+
+  def three_of_a_kind?
+    cards.group_by(&:name).values.map(&:count).sort == [1, 1, 3]
+  end
+
+  def three_of_a_kind_cards
+    grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
+    grouped_cards.first(2).map(&:last).flatten.sort + grouped_cards.last.last
   end
 
   def flash?
