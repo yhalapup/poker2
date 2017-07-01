@@ -17,7 +17,7 @@ class Poker
     # puts "hands: -- #{a} --"
     # a = hands.sort.map(&:to_s)
     # puts "hands.sort: -- #{a} --"
-    result = [hands.sort.last]
+    result = hands.sort!.slice hands.index(hands[-1]) || 0..-1
     result.map(&:to_s)
   end
 
