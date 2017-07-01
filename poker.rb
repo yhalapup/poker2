@@ -87,6 +87,10 @@ class Hand
   end
 
   def combination_data
+    if flash? && straight?
+      return { STRAIGHT_FLUSH => cards }
+    end
+
     if flash?
       return { FLUSH => cards }
     end
@@ -105,6 +109,14 @@ class Hand
 
     if three_of_a_kind?
       return { THREE_OF_A_KIND => three_of_a_kind_cards }
+    end
+
+    if full_house?
+      return { FULL_HOUSE => full_house_cards }
+    end
+
+    if four_of_a_kind?
+      return { FOUR_OF_A_KIND => four_of_a_kind_cards }
     end
 
     { HIGH_CARD => cards }
@@ -139,6 +151,24 @@ class Hand
     grouped_cards.first(2).map(&:last).flatten.sort + grouped_cards.last.last
   end
 
+  def full_house?
+    cards.group_by(&:name).values.map(&:count).sort == [2, 3]
+  end
+
+  def full_house_cards
+    grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
+    grouped_cards.first.last + grouped_cards.last.last
+  end
+
+  def four_of_a_kind?
+    cards.group_by(&:name).values.map(&:count).sort == [1, 4]
+  end
+
+  def four_of_a_kind_cards
+    grouped_cards = cards.group_by(&:name).sort_by{ |_, v| v.length }
+    grouped_cards.first.last + grouped_cards.last.last
+  end
+
   def flash?
     cards.group_by(&:suite).size == 1
   end
@@ -150,15 +180,15 @@ class Hand
     end
 
     straights = Card::ORDER.each_cons(5)
-    straights.include?(to_s) && ace_to_five_straight?
+    straights.include?(cards.map(&:name))
   end
 
   def ace_to_five_straight?
-    Card::ACE_TO_FIVE_ORDER.sort == to_s
+    Card::ACE_TO_FIVE_ORDER.sort == cards.map(&:name)
   end
 
   def change_card_order_for_ace_to_five_straight
-    @cards = card.unshift(card.pop)
+    @cards = cards.unshift(cards.pop)
   end
 end
 
