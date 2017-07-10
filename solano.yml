@@ -1,2 +1,2 @@
 tests:
-  - ruby porker_test.rb
+  - ruby poker_test.rb
