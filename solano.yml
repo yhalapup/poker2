@@ -1,2 +1,4 @@
+hooks:
+  pre_setup: gem install minitest
 tests:
   - ruby poker_test.rb
