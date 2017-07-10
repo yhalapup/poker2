@@ -1,0 +1,2 @@
+tests:
+  - ruby porker_test.rb
