@@ -1,10 +1,7 @@
 class Poker
   CARDS_ORDER = %w(2 3 4 5 6 7 8 9 10 J Q K A).freeze
 
-
   attr_reader :hands
-
-
 
   def initialize(hands)
     @hands = hands.map { |hand| Hand.new(hand) }
