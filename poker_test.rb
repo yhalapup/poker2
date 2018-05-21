@@ -4,6 +4,7 @@ require_relative 'poker'
 
 class PokerTest < Minitest::Test
   def test_one_hand
+    sleep 100
     high_of_jack = %w(4S 5S 7H 8D JC)
     game = Poker.new([high_of_jack])
     assert_equal [high_of_jack], game.best_hand
