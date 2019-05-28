@@ -1,3 +1,4 @@
 # Ignore the .idea project directory from RubyMine IDE
 /.idea
 .solano*
+*.log
